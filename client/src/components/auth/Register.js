@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
+import classnames from "classnames";
 
 class Register extends Component {
   constructor() {
@@ -33,10 +34,12 @@ class Register extends Component {
     axios
       .post("/api/users/register", newUser)
       .then(res => console.log(res.data))
-      .catch(err => console.log(err.response.data));
+      .catch(err => this.setState({ errs: err.response.data }));
   }
 
   render() {
+    const { errs } = this.state;
+
     return (
       <div>
         <div className="register">
@@ -47,26 +50,36 @@ class Register extends Component {
                 <p className="lead text-center">
                   Create your DevConnector account
                 </p>
-                <form onSubmit={this.onSubmit}>
+                <form noValidate onSubmit={this.onSubmit}>
                   <div className="form-group">
                     <input
                       type="text"
-                      className="form-control form-control-lg"
+                      className={classnames("form-control form-control-lg", {
+                        "is-invalid": errs.name
+                      })}
                       placeholder="Name"
                       name="name"
                       value={this.state.name}
                       onChange={this.onChange}
                     />
+                    {errs.name && (
+                      <div className="invalid-feedback">{errs.name}</div>
+                    )}
                   </div>
                   <div className="form-group">
                     <input
                       type="email"
-                      className="form-control form-control-lg"
+                      className={classnames("form-control form-control-lg", {
+                        "is-invalid": errs.email
+                      })}
                       placeholder="Email Address"
                       name="email"
                       value={this.state.email}
                       onChange={this.onChange}
                     />
+                    {errs.email && (
+                      <div className="invalid-feedback">{errs.email}</div>
+                    )}
                     <small className="form-text text-muted">
                       This site uses Gravatar so if you want a profile image,
                       use a Gravatar email
@@ -75,22 +88,32 @@ class Register extends Component {
                   <div className="form-group">
                     <input
                       type="password"
-                      className="form-control form-control-lg"
+                      className={classnames("form-control form-control-lg", {
+                        "is-invalid": errs.password
+                      })}
                       placeholder="Password"
                       name="password"
                       value={this.state.password}
                       onChange={this.onChange}
                     />
+                    {errs.password && (
+                      <div className="invalid-feedback">{errs.password}</div>
+                    )}
                   </div>
                   <div className="form-group">
                     <input
                       type="password"
-                      className="form-control form-control-lg"
+                      className={classnames("form-control form-control-lg", {
+                        "is-invalid": errs.password2
+                      })}
                       placeholder="Confirm Password"
                       name="password2"
                       value={this.state.password2}
                       onChange={this.onChange}
                     />
+                    {errs.password2 && (
+                      <div className="invalid-feedback">{errs.password2}</div>
+                    )}
                   </div>
                   <input
                     type="submit"
